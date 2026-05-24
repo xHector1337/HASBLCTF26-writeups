@@ -1,0 +1,5 @@
+THE FLAG FORMAT IS hasbl{}
+
+
+compile with this => gcc -O2 -o streamlock chall.c
+key: 0xDEADBEEFCAFEBABE
