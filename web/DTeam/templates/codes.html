@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Redeem Wallet Code</h2>
+<form method="POST" class="card" style="max-width: 400px;">
+    <input type="text" name="code" placeholder="DTEAM-XXXX-XXXX" required>
+    <button type="submit" class="btn">Redeem</button>
+</form>
+{% endblock %}

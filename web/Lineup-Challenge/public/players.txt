@@ -1,0 +1,51 @@
+NAME,POSITION,AGE,NATIONALITY,CLUB,LEAGUE
+Alisson Becker,GK,33,Brazilian,Liverpool,Premier League
+Ederson Moraes,GK,32,Brazilian,Fenerbahce,Turkish Super League
+David Raya,GK,30,Spanish,Arsenal,Premier League
+Manuel Neuer,GK,40,German,Bayern Munich,Bundesliga
+Marc-Andre ter Stegen,GK,34,German,Barcelona,La Liga
+Gianluigi Donnarumma,GK,27,Italian,Manchester City,Premier League
+Wojciech Szczesny,GK,36,Polish,Barcelona,La Liga
+Mike Maignan,GK,30,French,AC Milan,Serie A
+Thibaut Courtois,GK,33,Belgian,Real Madrid,La Liga
+Trent Alexander-Arnold,RB,27,English,Real Madrid,La Liga
+Achraf Hakimi,RB,27,Moroccan,PSG,Ligue 1
+Reece James,RB,26,English,Chelsea,Premier League
+Theo Hernandez,LB,28,French,AC Milan,Serie A
+Alphonso Davies,LB,25,Canadian,Bayern Munich,Bundesliga
+Andrew Robertson,LB,32,Scottish,Liverpool,Premier League
+Virgil van Dijk,CB,34,Dutch,Liverpool,Premier League
+William Saliba,CB,25,French,Arsenal,Premier League
+Ruben Dias,CB,28,Portuguese,Manchester City,Premier League
+Marquinhos,CB,31,Brazilian,PSG,Ligue 1
+Alessandro Bastoni,CB,27,Italian,Inter Milan,Serie A
+Antonio Rudiger,CB,33,German,Real Madrid,La Liga
+Rodri,CDM,29,Spanish,Manchester City,Premier League
+Casemiro,CDM,34,Brazilian,Manchester United,Premier League
+Aurelien Tchouameni,CDM,26,French,Real Madrid,La Liga
+Pedri,CM,23,Spanish,Barcelona,La Liga
+Jude Bellingham,CM,22,English,Real Madrid,La Liga
+Kevin De Bruyne,CM,34,Belgian,Napoli,Serie A
+Luka Modric,CM,40,Croatian,AC Milan,Serie A
+Florian Wirtz,CAM,23,German,Liverpool,Premier League
+Martin Odegaard,CAM,27,Norwegian,Arsenal,Premier League
+Bernardo Silva,CAM,31,Portuguese,Manchester City,Premier League
+Federico Valverde,CAM,27,Uruguayan,Real Madrid,La Liga
+Kylian Mbappe,ST,27,French,Real Madrid,La Liga
+Erling Haaland,ST,25,Norwegian,Manchester City,Premier League
+Harry Kane,ST,32,English,Bayern Munich,Bundesliga
+Vinicius Jr,LW,25,Brazilian,Real Madrid,La Liga
+Bukayo Saka,RW,24,English,Arsenal,Premier League
+Leroy Sane,LW,30,German,Galatasaray,Turkish Super League
+Raphinha,RW,29,Brazilian,Barcelona,La Liga
+Lamine Yamal,RW,18,Spanish,Barcelona,La Liga
+Jamal Musiala,LW,23,German,Bayern Munich,Bundesliga
+Marcus Rashford,LW,28,English,Barcelona,La Liga
+Ousmane Dembele,RW,28,French,PSG,Ligue 1
+Khvicha Kvaratskhelia,LW,25,Georgian,PSG,Ligue 1
+Rafael Leao,LW,26,Portuguese,AC Milan,Serie A
+Nicolo Barella,CM,29,Italian,Inter Milan,Serie A
+Hakan Calhanoglu,CDM,32,Turkish,Inter Milan,Serie A
+Phil Foden,CAM,25,English,Manchester City,Premier League
+Cole Palmer,CAM,23,English,Chelsea,Premier League
+Dani Carvajal,RB,34,Spanish,Real Madrid,La Liga

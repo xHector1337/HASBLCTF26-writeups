@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARENA.EXE</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --bg: #070a0f;
+    --panel: #0d1117;
+    --border: #1a2535;
+    --accent: #00ffe1;
+    --accent2: #ff4c4c;
+    --gold: #ffd700;
+    --green: #39ff14;
+    --text: #c8d6e5;
+    --dim: #4a5568;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  .screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+  .screen.active { display: flex; }
+
+  #menuScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 40%, #0a1628 0%, #070a0f 70%);
+  }
+
+  .scanlines {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg, transparent, transparent 2px,
+      rgba(0,255,225,0.015) 2px, rgba(0,255,225,0.015) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  .menu-title {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 900;
+    color: var(--accent);
+    text-shadow: 0 0 30px rgba(0,255,225,0.6), 0 0 60px rgba(0,255,225,0.3);
+    letter-spacing: 0.2em;
+    animation: flicker 4s infinite;
+    margin-bottom: 0.2em;
+  }
+
+  .menu-sub {
+    font-size: 0.85rem;
+    color: var(--dim);
+    letter-spacing: 0.3em;
+    margin-bottom: 3rem;
+    text-transform: uppercase;
+  }
+
+  @keyframes flicker {
+    0%,95%,100% { opacity: 1; }
+    96% { opacity: 0.7; }
+    97% { opacity: 1; }
+    98% { opacity: 0.5; }
+    99% { opacity: 1; }
+  }
+
+  .menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    width: 260px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 0.85rem 2rem;
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn::before {
+    content: '';
+    position: absolute;
+    left: -100%; top: 0; width: 100%; height: 100%;
+    background: rgba(0,255,225,0.08);
+    transition: left 0.2s;
+  }
+
+  .btn:hover::before { left: 0; }
+  .btn:hover { box-shadow: 0 0 15px rgba(0,255,225,0.4); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn.red { border-color: var(--accent2); color: var(--accent2); }
+  .btn.red::before { background: rgba(255,76,76,0.08); }
+  .btn.red:hover { box-shadow: 0 0 15px rgba(255,76,76,0.4); }
+
+  .btn.gold { border-color: var(--gold); color: var(--gold); }
+  .btn.gold::before { background: rgba(255,215,0,0.08); }
+  .btn.gold:hover { box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+
+  .high-score-display {
+    margin-top: 2.5rem;
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.1em;
+  }
+  .high-score-display span { color: var(--gold); }
+
+  #shopScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at 50% 30%, #0f1a0a 0%, #070a0f 70%);
+    gap: 1.5rem;
+  }
+
+  .shop-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(255,215,0,0.5);
+    letter-spacing: 0.2em;
+  }
+
+  .shop-coins { font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
+
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 220px);
+    gap: 1rem;
+  }
+
+  .shop-item {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    padding: 1.4rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    transition: border-color 0.2s;
+  }
+
+  .shop-item:hover { border-color: var(--gold); }
+  .shop-item.maxed { border-color: var(--green); opacity: 0.6; pointer-events: none; }
+
+  .shop-item-icon { font-size: 2rem; }
+
+  .shop-item-name {
+    font-family: 'Orbitron', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .shop-item-desc {
+    font-size: 0.72rem;
+    color: var(--dim);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .shop-item-price { font-size: 0.8rem; color: var(--gold); }
+
+  .shop-item-level {
+    font-size: 0.7rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+  }
+
+  .shop-buy-btn {
+    padding: 0.5rem;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    cursor: pointer;
+    letter-spacing: 0.1em;
+    transition: all 0.15s;
+  }
+
+  .shop-buy-btn:hover { background: rgba(255,215,0,0.1); }
+  .shop-buy-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+  #gameScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #gameCanvas {
+    border: 1px solid var(--border);
+    display: block;
+    cursor: crosshair;
+  }
+
+  .hud {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.2rem;
+    background: rgba(7,10,15,0.85);
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .hud-score { color: var(--accent); }
+  .hud-score span { color: #fff; font-family: 'Orbitron', monospace; font-weight: 700; }
+
+  .hud-hp { display: flex; align-items: center; gap: 0.5rem; color: var(--accent2); }
+
+  .hp-bar {
+    width: 120px; height: 10px;
+    background: var(--border);
+    border: 1px solid var(--accent2);
+    position: relative; overflow: hidden;
+  }
+
+  .hp-fill {
+    height: 100%;
+    background: var(--accent2);
+    transition: width 0.1s;
+    box-shadow: 0 0 6px rgba(255,76,76,0.6);
+  }
+
+  .hud-coins { color: var(--gold); }
+  .hud-coins span { color: #fff; }
+
+  .hud-wave { color: var(--dim); font-size: 0.75rem; }
+  .hud-wave span { color: var(--accent2); font-family: 'Orbitron', monospace; }
+
+  #gameoverScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2rem;
+    background: rgba(7,10,15,0.95);
+  }
+
+  .gameover-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--accent2);
+    text-shadow: 0 0 30px rgba(255,76,76,0.7);
+    letter-spacing: 0.2em;
+    animation: flicker 2s infinite;
+  }
+
+  .gameover-score { font-size: 1rem; color: var(--dim); letter-spacing: 0.15em; }
+  .gameover-score span { color: var(--gold); font-size: 1.4rem; }
+
+  #flagScreen {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    background: radial-gradient(ellipse at 50% 50%, #001a0f 0%, #070a0f 70%);
+  }
+
+  .flag-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--green);
+    text-shadow: 0 0 30px rgba(57,255,20,0.7);
+    letter-spacing: 0.2em;
+    animation: flicker 3s infinite;
+  }
+
+  .flag-box {
+    border: 1px solid var(--green);
+    padding: 1.2rem 2.5rem;
+    background: rgba(57,255,20,0.05);
+    box-shadow: 0 0 30px rgba(57,255,20,0.15);
+  }
+
+  .flag-text {
+    font-family: 'Orbitron', monospace;
+    font-size: 1.3rem;
+    color: var(--green);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 10px rgba(57,255,20,0.8);
+  }
+
+  .flag-sub {
+    font-size: 0.8rem;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+    text-align: center;
+    max-width: 400px;
+    line-height: 1.8;
+  }
+
+  #toast {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--panel);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 0.6rem 1.5rem;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    transition: transform 0.3s;
+    z-index: 10000;
+    white-space: nowrap;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+
+  #canvasWrapper {
+    position: relative;
+  }
+</style>
+</head>
+<body>
+
+<div class="scanlines"></div>
+<div id="toast"></div>
+
+<div id="menuScreen" class="screen active">
+  <div class="menu-title">ARENA.EXE</div>
+  <div class="menu-sub">Survival Combat Simulator v1.0</div>
+  <div class="menu-buttons">
+    <button class="btn" onclick="startGame()">▶ START</button>
+    <button class="btn gold" onclick="showShop()">◈ SHOP</button>
+  </div>
+  <div class="high-score-display">HIGH SCORE: <span id="highScoreDisplay">0</span></div>
+</div>
+
+<div id="shopScreen" class="screen">
+  <div class="shop-title">◈ SHOP</div>
+  <div class="shop-coins">COINS: <span id="shopCoins">0</span></div>
+  <div class="shop-grid">
+
+    <div class="shop-item" id="shopItem-speed">
+      <div class="shop-item-icon">⚡</div>
+      <div class="shop-item-name">Speed Boost</div>
+      <div class="shop-item-desc">Increases player movement speed. Each level adds +20% base speed.</div>
+      <div class="shop-item-price" id="shopPrice-speed">50 coins</div>
+      <div class="shop-item-level" id="shopLevel-speed">LEVEL 0 / 5</div>
+      <button class="shop-buy-btn" id="shopBtn-speed" onclick="buyItem('speed')">BUY</button>
+    </div>
+
+    <div class="shop-item" id="shopItem-fire">
+      <div class="shop-item-icon">🔫</div>
+      <div class="shop-item-name">Rapid Fire</div>
+      <div class="shop-item-desc">Reduces shot cooldown. Each level cuts 20% off cooldown.</div>
+      <div class="shop-item-price" id="shopPrice-fire">75 coins</div>
+      <div class="shop-item-level" id="shopLevel-fire">LEVEL 0 / 5</div>
+      <button class="shop-buy-btn" id="shopBtn-fire" onclick="buyItem('fire')">BUY</button>
+    </div>
+
+    <div class="shop-item" id="shopItem-hint">
+      <div class="shop-item-icon">?</div>
+      <div class="shop-item-name">Intel File</div>
+      <div class="shop-item-desc">Classified operational data. One-time purchase.</div>
+      <div class="shop-item-price">9999 coins</div>
+      <div class="shop-item-level" id="shopLevel-hint">LEVEL 0 / 1</div>
+      <button class="shop-buy-btn" id="shopBtn-hint" onclick="buyItem('hint')">BUY</button>
+    </div>
+
+  </div>
+  <button class="btn" style="width:260px;margin-top:0.5rem" onclick="showMenu()">◀ BACK</button>
+</div>
+
+<div id="gameScreen" class="screen">
+  <div class="hud">
+    <div class="hud-score">SCORE: <span id="hudScore">0</span></div>
+    <div class="hud-hp">
+      HP
+      <div class="hp-bar"><div class="hp-fill" id="hpFill"></div></div>
+      <span id="hpText">100</span>
+    </div>
+    <div class="hud-wave">THREAT: <span id="hudWave">1</span></div>
+    <div class="hud-coins">COINS: <span id="hudCoins">0</span></div>
+  </div>
+  <div id="canvasWrapper">
+    <canvas id="gameCanvas"></canvas>
+  </div>
+</div>
+
+<div id="gameoverScreen" class="screen">
+  <div class="gameover-title">GAME OVER</div>
+  <div class="gameover-score">SCORE: <span id="gameoverScore">0</span></div>
+  <div class="gameover-score" style="font-size:0.85rem">COINS EARNED: <span id="gameoverCoins" style="color:var(--gold);font-size:1rem">0</span></div>
+  <div class="menu-buttons" style="margin-top:1rem">
+    <button class="btn" onclick="startGame()">▶ RESTART</button>
+    <button class="btn gold" onclick="showShop()">◈ SHOP</button>
+    <button class="btn red" onclick="showMenu()">◀ MAIN MENU</button>
+  </div>
+</div>
+
+<div id="flagScreen" class="screen">
+  <div class="flag-title">ACCESS GRANTED</div>
+  <div class="flag-box">
+    <div class="flag-text" id="flagText"></div>
+  </div>
+  <div class="flag-sub">
+    You bypassed the client-side seed validation.<br/>
+    The server never lies. The client always does.
+  </div>
+  <button class="btn" style="width:260px" onclick="showMenu()">◀ MAIN MENU</button>
+</div>
+
+<script>
+const UPGRADE_MAX = 5;
+const HINT_MAX = 1;
+
+const UPGRADE_BASE_COST = { speed: 50, fire: 75, hint: 9999 };
+const UPGRADE_COST_SCALE = { speed: 30, fire: 40 };
+
+const state = {
+  coins: parseInt(localStorage.getItem('coins') || '0'),
+  highScore: parseInt(localStorage.getItem('highScore') || '0'),
+  levels: JSON.parse(localStorage.getItem('levels') || '{"speed":0,"fire":0,"hint":0}')
+};
+
+function saveState() {
+  localStorage.setItem('coins', state.coins);
+  localStorage.setItem('highScore', state.highScore);
+  localStorage.setItem('levels', JSON.stringify(state.levels));
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function showMenu() {
+  document.getElementById('highScoreDisplay').textContent = state.highScore;
+  showScreen('menuScreen');
+}
+
+function showShop() {
+  document.getElementById('shopCoins').textContent = state.coins;
+
+  ['speed', 'fire'].forEach(id => {
+    const lvl = state.levels[id];
+    const max = UPGRADE_MAX;
+    const cost = UPGRADE_BASE_COST[id] + UPGRADE_COST_SCALE[id] * lvl;
+    document.getElementById('shopLevel-' + id).textContent = `LEVEL ${lvl} / ${max}`;
+    document.getElementById('shopPrice-' + id).textContent = `${cost} coins`;
+    const item = document.getElementById('shopItem-' + id);
+    const btn = document.getElementById('shopBtn-' + id);
+    if (lvl >= max) { item.classList.add('maxed'); btn.disabled = true; }
+    else { item.classList.remove('maxed'); btn.disabled = false; }
+  });
+
+  const hintLvl = state.levels.hint;
+  document.getElementById('shopLevel-hint').textContent = `LEVEL ${hintLvl} / ${HINT_MAX}`;
+  const hintItem = document.getElementById('shopItem-hint');
+  const hintBtn = document.getElementById('shopBtn-hint');
+  if (hintLvl >= HINT_MAX) { hintItem.classList.add('maxed'); hintBtn.disabled = true; }
+  else { hintItem.classList.remove('maxed'); hintBtn.disabled = false; }
+
+  showScreen('shopScreen');
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+function buyItem(id) {
+  if (id === 'hint') {
+    if (state.levels.hint >= HINT_MAX) return;
+    if (state.coins < 9999) { toast('NOT ENOUGH COINS'); return; }
+    const sentCoins = state.coins;
+    state.coins -= 9999;
+    fetch('/api/buy-hint', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ coins: sentCoins })
+    })
+      .then(r => r.json())
+      .then(data => {
+        if (!data.token) { toast('ERROR'); return; }
+        return fetch('/api/hint', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: data.token })
+        }).then(r => r.json()).then(hintData => {
+          state.levels.hint = 1;
+          saveState();
+          toast('INTEL: ' + hintData.hint);
+          showShop();
+        });
+      })
+      .catch(() => toast('SERVER ERROR'));
+    return;
+  }
+
+  const lvl = state.levels[id];
+  if (lvl >= UPGRADE_MAX) return;
+  const cost = UPGRADE_BASE_COST[id] + UPGRADE_COST_SCALE[id] * lvl;
+  if (state.coins < cost) { toast('NOT ENOUGH COINS'); return; }
+  state.coins -= cost;
+  state.levels[id]++;
+  saveState();
+  toast('UPGRADE PURCHASED — LEVEL ' + state.levels[id]);
+  showShop();
+}
+
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+const wrapper = document.getElementById('canvasWrapper');
+
+const CANVAS_W = 800;
+const CANVAS_H = 560;
+canvas.width = CANVAS_W;
+canvas.height = CANVAS_H;
+
+const BASE_PLAYER_SPEED = 3;
+const BASE_FIRE_COOLDOWN = 300;
+
+const keys = {};
+document.addEventListener('keydown', e => { keys[e.key.toLowerCase()] = true; e.preventDefault(); });
+document.addEventListener('keyup', e => { keys[e.key.toLowerCase()] = false; });
+
+let mouseX = CANVAS_W / 2, mouseY = CANVAS_H / 2;
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = e.clientX - r.left;
+  mouseY = e.clientY - r.top;
+});
+canvas.addEventListener('mousedown', e => {
+  if (e.button === 0 && gState && gState.running) shoot();
+});
+
+let rafId = null;
+let gState = null;
+
+let shakeFrames = 0;
+let shakeIntensity = 0;
+
+function triggerShake(intensity, frames) {
+  shakeIntensity = Math.max(shakeIntensity, intensity);
+  shakeFrames = Math.max(shakeFrames, frames);
+}
+
+function seededRand(seed) {
+  let s = (seed ^ 0xdeadbeef) >>> 0;
+  return function() {
+    s = Math.imul(s ^ (s >>> 15), s | 1);
+    s ^= s + Math.imul(s ^ (s >>> 7), s | 61);
+    return ((s ^ (s >>> 14)) >>> 0) / 0xffffffff;
+  };
+}
+
+function initGame(seed) {
+  const speedMult = 1 + state.levels.speed * 0.2;
+  const fireMult = Math.pow(0.8, state.levels.fire);
+
+  gState = {
+    running: true,
+    score: 0,
+    coinsEarned: 0,
+    player: {
+      x: CANVAS_W / 2 - 10, y: CANVAS_H / 2 - 10,
+      w: 20, h: 20,
+      hp: 100, maxHp: 100,
+      speed: BASE_PLAYER_SPEED * speedMult,
+      invincible: 0
+    },
+    bullets: [],
+    enemies: [],
+    particles: [],
+    lastShot: 0,
+    fireCooldown: BASE_FIRE_COOLDOWN * fireMult,
+    lastSpawn: 0,
+    rand: seededRand(Math.abs(seed) || 42),
+    frame: 0,
+    threatLevel: 1
+  };
+}
+
+function shoot() {
+  const now = performance.now();
+  if (now - gState.lastShot < gState.fireCooldown) return;
+  gState.lastShot = now;
+
+  const p = gState.player;
+  const cx = p.x + p.w / 2;
+  const cy = p.y + p.h / 2;
+  const dx = mouseX - cx;
+  const dy = mouseY - cy;
+  const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+
+  gState.bullets.push({ x: cx, y: cy, vx: (dx/dist)*8, vy: (dy/dist)*8, r: 5 });
+}
+
+function spawnEnemy() {
+  const edge = Math.floor(gState.rand() * 4);
+  let x, y;
+  if (edge === 0) { x = gState.rand() * CANVAS_W; y = -20; }
+  else if (edge === 1) { x = CANVAS_W + 20; y = gState.rand() * CANVAS_H; }
+  else if (edge === 2) { x = gState.rand() * CANVAS_W; y = CANVAS_H + 20; }
+  else { x = -20; y = gState.rand() * CANVAS_H; }
+
+  const threat = gState.threatLevel;
+  const speed = 1.0 + gState.rand() * 0.6 + threat * 0.25;
+  const r = 10 + Math.min(threat * 0.5, 6);
+  gState.enemies.push({ x, y, r, speed });
+}
+
+function spawnParticles(x, y, color, count, speed) {
+  for (let i = 0; i < count; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const s = (speed || 2) + Math.random() * 2;
+    gState.particles.push({
+      x, y,
+      vx: Math.cos(angle) * s,
+      vy: Math.sin(angle) * s,
+      life: 1,
+      decay: 0.03 + Math.random() * 0.03,
+      color,
+      size: 2 + Math.random() * 2
+    });
+  }
+}
+
+function updateGame() {
+  if (!gState || !gState.running) return;
+  gState.frame++;
+
+  gState.threatLevel = 1 + Math.floor(gState.score / 100);
+  document.getElementById('hudWave').textContent = gState.threatLevel;
+
+  const p = gState.player;
+  if (p.invincible > 0) p.invincible--;
+
+  if (keys['w'] || keys['arrowup'])    p.y -= p.speed;
+  if (keys['s'] || keys['arrowdown'])  p.y += p.speed;
+  if (keys['a'] || keys['arrowleft'])  p.x -= p.speed;
+  if (keys['d'] || keys['arrowright']) p.x += p.speed;
+
+  p.x = Math.max(0, Math.min(CANVAS_W - p.w, p.x));
+  p.y = Math.max(0, Math.min(CANVAS_H - p.h, p.y));
+
+  const spawnRate = Math.max(300, 2000 - gState.threatLevel * 80);
+  const now = performance.now();
+  if (now - gState.lastSpawn > spawnRate) {
+    const batch = Math.min(1 + Math.floor(gState.threatLevel / 5), 4);
+    for (let i = 0; i < batch; i++) spawnEnemy();
+    gState.lastSpawn = now;
+  }
+
+  gState.bullets = gState.bullets.filter(b => {
+    b.x += b.vx; b.y += b.vy;
+    return b.x > -20 && b.x < CANVAS_W+20 && b.y > -20 && b.y < CANVAS_H+20;
+  });
+
+  const pcx = p.x + p.w/2;
+  const pcy = p.y + p.h/2;
+
+  gState.enemies = gState.enemies.filter(e => {
+    const dx = pcx - e.x, dy = pcy - e.y;
+    const dist = Math.sqrt(dx*dx + dy*dy) || 1;
+    e.x += (dx/dist) * e.speed;
+    e.y += (dy/dist) * e.speed;
+
+    let killed = false;
+    gState.bullets = gState.bullets.filter(b => {
+      const bdx = b.x - e.x, bdy = b.y - e.y;
+      if (Math.sqrt(bdx*bdx + bdy*bdy) < e.r + b.r) {
+        killed = true;
+        spawnParticles(e.x, e.y, '#ff4c4c', 10, 3);
+        triggerShake(3, 6);
+        return false;
+      }
+      return true;
+    });
+
+    if (killed) {
+      gState.score += 10;
+      gState.coinsEarned += 2;
+      document.getElementById('hudScore').textContent = gState.score;
+      document.getElementById('hudCoins').textContent = state.coins + gState.coinsEarned;
+      return false;
+    }
+
+    if (p.invincible === 0 && dist < e.r + Math.min(p.w, p.h)/2 + 2) {
+      p.hp -= 25;
+      p.invincible = 40;
+      spawnParticles(pcx, pcy, '#00ffe1', 12, 4);
+      triggerShake(8, 14);
+      document.getElementById('hpFill').style.width = Math.max(0, p.hp/p.maxHp*100) + '%';
+      document.getElementById('hpText').textContent = Math.max(0, p.hp);
+
+      if (p.hp <= 0) {
+        gameOver();
+        return false;
+      }
+      return false;
+    }
+
+    return true;
+  });
+
+  gState.particles = gState.particles.filter(pt => {
+    pt.x += pt.vx; pt.y += pt.vy;
+    pt.life -= pt.decay;
+    pt.vx *= 0.9; pt.vy *= 0.9;
+    return pt.life > 0;
+  });
+}
+
+function drawGame() {
+  let ox = 0, oy = 0;
+
+  if (shakeFrames > 0) {
+    ox = (Math.random() - 0.5) * shakeIntensity * 2;
+    oy = (Math.random() - 0.5) * shakeIntensity * 2;
+    shakeFrames--;
+    shakeIntensity *= 0.85;
+    if (shakeFrames <= 0) { shakeIntensity = 0; ox = 0; oy = 0; }
+    wrapper.style.transform = `translate(${ox}px, ${oy}px)`;
+  } else {
+    wrapper.style.transform = '';
+  }
+
+  ctx.clearRect(0, 0, CANVAS_W, CANVAS_H);
+
+  ctx.strokeStyle = 'rgba(26,37,53,0.5)';
+  ctx.lineWidth = 1;
+  for (let x = 0; x < CANVAS_W; x += 40) {
+    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, CANVAS_H); ctx.stroke();
+  }
+  for (let y = 0; y < CANVAS_H; y += 40) {
+    ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(CANVAS_W, y); ctx.stroke();
+  }
+
+  const p = gState.player;
+
+  const flicker = p.invincible > 0 && Math.floor(p.invincible / 4) % 2 === 0;
+  if (!flicker) {
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = '#39ff14';
+    ctx.fillStyle = '#39ff14';
+    ctx.fillRect(p.x, p.y, p.w, p.h);
+
+    ctx.shadowBlur = 6;
+    ctx.strokeStyle = 'rgba(57,255,20,0.4)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(p.x - 3, p.y - 3, p.w + 6, p.h + 6);
+    ctx.shadowBlur = 0;
+  }
+
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = '#ffd700';
+  ctx.fillStyle = '#ffd700';
+  gState.bullets.forEach(b => {
+    ctx.beginPath();
+    ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.shadowBlur = 0;
+
+  gState.enemies.forEach(e => {
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = '#ff4c4c';
+    ctx.fillStyle = '#ff4c4c';
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.r, 0, Math.PI*2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(255,76,76,0.3)';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.r + 4, 0, Math.PI*2);
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+  });
+
+  gState.particles.forEach(pt => {
+    ctx.globalAlpha = pt.life;
+    ctx.fillStyle = pt.color;
+    ctx.shadowBlur = 5;
+    ctx.shadowColor = pt.color;
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, pt.size, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  ctx.shadowBlur = 0;
+}
+
+function gameOver() {
+  gState.running = false;
+  cancelAnimationFrame(rafId);
+  wrapper.style.transform = '';
+
+  state.coins += gState.coinsEarned;
+  if (gState.score > state.highScore) state.highScore = gState.score;
+  saveState();
+
+  document.getElementById('gameoverScore').textContent = gState.score;
+  document.getElementById('gameoverCoins').textContent = gState.coinsEarned;
+  showScreen('gameoverScreen');
+}
+
+function loop() {
+  updateGame();
+  drawGame();
+  if (gState && gState.running) rafId = requestAnimationFrame(loop);
+}
+
+async function startGame() {
+  const seed = Math.floor(Math.random() * 10000);
+
+  try {
+    const res = await fetch('/api/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ seed })
+    });
+    const data = await res.json();
+
+    if (data.status === 'flag') {
+      document.getElementById('flagText').textContent = data.flag;
+      showScreen('flagScreen');
+      return;
+    }
+
+    showScreen('gameScreen');
+    document.getElementById('hudScore').textContent = '0';
+    document.getElementById('hudCoins').textContent = state.coins;
+    document.getElementById('hpFill').style.width = '100%';
+    document.getElementById('hpText').textContent = '100';
+    document.getElementById('hudWave').textContent = '1';
+
+    if (rafId) cancelAnimationFrame(rafId);
+    shakeFrames = 0; shakeIntensity = 0;
+    initGame(data.seed);
+    gState.lastSpawn = performance.now();
+    rafId = requestAnimationFrame(loop);
+
+  } catch (err) {
+    toast('SERVER ERROR — TRY AGAIN');
+  }
+}
+
+document.getElementById('highScoreDisplay').textContent = state.highScore;
+</script>
+</body>
+</html>

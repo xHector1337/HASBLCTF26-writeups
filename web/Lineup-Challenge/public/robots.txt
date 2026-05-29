@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /secret-lineup
+Disallow: /api/
+
+# HINT #3: The Left Winger is Brazilian and plays for a Spanish club.

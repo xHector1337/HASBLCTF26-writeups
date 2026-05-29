@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T/I Forum — Underground Board</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+    :root {
+      --bg: #080808;
+      --bg2: #0e0e0e;
+      --bg3: #141414;
+      --border: #1e1e1e;
+      --green: #00ff41;
+      --green-dim: #00aa2a;
+      --red: #ff3333;
+      --yellow: #ffd700;
+      --muted: #444;
+      --text: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0,0,0,0.08) 2px,
+        rgba(0,0,0,0.08) 4px
+      );
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg2);
+    }
+
+    .logo {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 12px rgba(0,255,65,0.4);
+    }
+
+    .logo span { color: var(--muted); }
+
+    .status-bar {
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.6;
+    }
+
+    .status-bar .online { color: var(--green); }
+
+    nav {
+      background: var(--bg3);
+      border-bottom: 1px solid var(--border);
+      padding: 0.5rem 2rem;
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.75rem;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--green); }
+    nav a.active { color: var(--green); }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr 240px;
+      gap: 1.5rem;
+    }
+
+    .board-title {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .category {
+      margin-bottom: 1.5rem;
+    }
+
+    .category-header {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--green-dim);
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: 1px;
+    }
+
+    .thread {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 0.7rem 1rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      transition: background 0.15s;
+    }
+
+    .thread:hover { background: var(--bg3); }
+
+    .thread-title {
+      font-size: 0.8rem;
+      color: var(--text);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .thread-title.no-link { cursor: default; }
+
+    .thread-title:hover { color: var(--green); }
+
+    .thread-tag {
+      display: inline-block;
+      font-size: 0.6rem;
+      padding: 0.1rem 0.4rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-right: 0.4rem;
+      letter-spacing: 0.1em;
+    }
+
+    .thread-tag.hot { border-color: var(--red); color: var(--red); }
+    .thread-tag.new { border-color: var(--green); color: var(--green); }
+
+    .thread-meta {
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .locked-category .category-header {
+      border-left-color: var(--red);
+      color: var(--red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lock-icon { font-size: 0.8rem; }
+
+    .locked-thread {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--muted);
+    }
+
+    .locked-thread.is-locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .locked-thread.is-active {
+      opacity: 1;
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .locked-thread span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+
+    .widget {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+    }
+
+    .widget-header {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      background: var(--bg3);
+    }
+
+    .widget-body {
+      padding: 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.25rem 0;
+      border-bottom: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .stat-row:last-child { border-bottom: none; }
+    .stat-row .val { color: var(--green); }
+
+    .user-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.3rem 0;
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .user-row.me { color: var(--green); }
+
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 4px var(--green);
+      flex-shrink: 0;
+    }
+
+    .ticker {
+      font-size: 0.65rem;
+      color: var(--muted);
+      line-height: 1.8;
+      letter-spacing: 0.05em;
+    }
+
+    #admin-panel {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #admin-panel.show { display: flex; }
+
+    .admin-box {
+      background: var(--bg2);
+      border: 1px solid var(--green);
+      padding: 2.5rem;
+      max-width: 480px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 0 40px rgba(0,255,65,0.1);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .admin-box h2 {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 10px rgba(0,255,65,0.5);
+    }
+
+    .admin-box p {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .flag-display {
+      background: var(--bg);
+      border: 1px solid var(--green);
+      padding: 1rem;
+      font-size: 1rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      font-family: 'VT323', monospace;
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+      position: relative;
+    }
+
+    .flag-display:hover {
+      box-shadow: 0 0 20px rgba(0,255,65,0.2);
+    }
+
+    .flag-display::after {
+      content: 'click to copy';
+      display: block;
+      font-size: 0.6rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      font-family: 'Share Tech Mono', monospace;
+    }
+
+    .close-btn {
+      margin-top: 1.5rem;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 0.4rem 1.2rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      cursor: pointer;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .close-btn:hover { border-color: var(--red); color: var(--red); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1rem 2rem;
+      font-size: 0.65rem;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.1em;
+    }
+
+    #admin-banner {
+      display: none;
+      background: var(--bg3);
+      border-bottom: 1px solid var(--green);
+      padding: 0.4rem 2rem;
+      font-size: 0.7rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      cursor: pointer;
+    }
+
+    #admin-banner:hover { background: #0f1f0f; }
+    #admin-banner.show { display: flex; align-items: center; gap: 0.5rem; }
+  </style>
+</head>
+<body>
+
+  <div id="admin-banner" onclick="showAdminPanel()">
+    <span>▶</span> admin session active — click to access admin panel
+  </div>
+
+  <header>
+    <div class="logo">T/I Forum</div>
+    <div class="status-bar">
+      <div><span class="online">● ONLINE</span> — 847 users active</div>
+      <div>uptime: 312d 07h 44m</div>
+      <div>version: v1</div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#" class="active">[ board ]</a>
+    <a href="#">[ members ]</a>
+    <a href="#">[ leaks ]</a>
+    <a href="#">[ tools ]</a>
+    <a href="login.html" id="auth-link">[ login ]</a>
+  </nav>
+
+  <div class="container">
+
+    <main>
+      <div class="board-title">// public boards — read only for guests</div>
+
+      <div class="category">
+        <div class="category-header">► general / off-topic</div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag new">new</span>
+            <a class="thread-title" href="thread_rate_limits.html">anyone else notice the rate limits on openai dropped again?</a>
+          </div>
+          <div class="thread-meta">replies: 34<br>n0x0ne · 2h ago</div>
+        </div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag">pinned</span>
+            <a class="thread-title" href="thread_rules.html">welcome to T/I Forum — read the rules before posting</a>
+          </div>
+          <div class="thread-meta">replies: 1<br>admin · 312d ago</div>
+        </div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag">disc</span>
+            <a class="thread-title" href="thread_vpn_2026.html">best vpn setups for 2026 — megathread</a>
+          </div>
+          <div class="thread-meta">replies: 201<br>vvitch · 1d ago</div>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-header">► ctf / challenges</div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag hot">hot</span>
+            <a class="thread-title" href="thread_picoctf_2026.html">picoCTF 2026 writeups — drop yours here</a>
+          </div>
+          <div class="thread-meta">replies: 88<br>bitflip · 5h ago</div>
+        </div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag">q</span>
+            <a class="thread-title" href="thread_pwn_help.html">stuck on a pwn chall, anyone can hint me?</a>
+          </div>
+          <div class="thread-meta">replies: 12<br>r00tless · 14h ago</div>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-header">► peak</div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag hot">hot</span>
+            <span class="thread-title no-link">Guys, HASBL CTF is so peak</span>
+          </div>
+          <div class="thread-meta">replies: 27<br>reqsuent · 3h ago</div>
+        </div>
+      </div>
+
+      <div class="category">
+        <div class="category-header">► networking / recon</div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag">guide</span>
+            <a class="thread-title" href="thread_passive_recon.html">passive recon techniques — a comprehensive guide</a>
+          </div>
+          <div class="thread-meta">replies: 56<br>0xDEAD · 3d ago</div>
+        </div>
+        <div class="thread">
+          <div>
+            <span class="thread-tag">new</span>
+            <a class="thread-title" href="thread_learn_networking.html">How can I learn networking?</a>
+          </div>
+          <div class="thread-meta">replies: 19<br>netdiver · 6h ago</div>
+        </div>
+      </div>
+
+      <div class="category locked-category">
+        <div class="category-header">
+          ► admin / private
+          <span class="lock-icon">🔒 admin only</span>
+        </div>
+        <a class="locked-thread is-locked" data-admin-link="private_internal.html" href="#" aria-disabled="true"><span>🔒</span><span>internal board — access denied</span></a>
+        <a class="locked-thread is-locked" data-admin-link="private_flag_distribution.html" href="#" aria-disabled="true"><span>🔒</span><span>flag distribution thread — admin only</span></a>
+      </div>
+
+    </main>
+
+    <aside class="sidebar">
+
+      <div class="widget">
+        <div class="widget-header">// board stats</div>
+        <div class="widget-body">
+          <div class="stat-row"><span>threads</span><span class="val">4,821</span></div>
+          <div class="stat-row"><span>replies</span><span class="val">38,209</span></div>
+          <div class="stat-row"><span>members</span><span class="val">1,337</span></div>
+          <div class="stat-row"><span>online</span><span class="val">847</span></div>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="widget-header">// active users</div>
+        <div class="widget-body" id="active-users">
+          <div class="user-row"><div class="dot"></div> n0x0ne</div>
+          <div class="user-row"><div class="dot"></div> bitflip</div>
+          <div class="user-row"><div class="dot"></div> noraxis</div>
+          <div class="user-row"><div class="dot"></div> 0xDEAD</div>
+          <div class="user-row"><div class="dot"></div> r00tless</div>
+          <div class="user-row"><div class="dot"></div> netdiver</div>
+        </div>
+      </div>
+
+      <div class="widget">
+        <div class="widget-header">// recent activity</div>
+        <div class="widget-body ticker">
+          <div>› n0x0ne replied in ctf</div>
+          <div>› vvitch posted a new thread</div>
+          <div>› bitflip updated profile</div>
+          <div>› 0xDEAD added an attachment</div>
+          <div>› r00tless joined the board</div>
+        </div>
+      </div>
+
+    </aside>
+  </div>
+
+  <footer>
+    T/I Forum © 2026 — no logs. no traces. no mercy. &nbsp;|&nbsp; powered by anonymity
+  </footer>
+
+  <div id="admin-panel">
+    <div class="admin-box">
+      <h2>// ADMIN ACCESS</h2>
+      <p>session verified. welcome back, administrator.</p>
+      <div class="flag-display" onclick="copyFlag()">
+        <span id="flag-text">admin session required</span>
+        <span id="flag-copy-msg" style="color:var(--green);font-size:0.6rem;font-family:'Share Tech Mono',monospace;display:block;margin-top:0.2rem;opacity:0;transition:opacity 0.3s;">copied!</span>
+      </div>
+      <button class="close-btn" onclick="closePanel()">close</button>
+    </div>
+  </div>
+
+  <script>
+    let adminSecret = null;
+    let flagValue = null;
+
+    function getCookie(name) {
+      const cookies = document.cookie.split(';');
+      for (let c of cookies) {
+        const [k, v] = c.trim().split('=');
+        if (k === name) return v;
+      }
+      return null;
+    }
+
+    function ensureAdminCookie() {
+      if (getCookie('admin') === null) {
+        document.cookie = 'admin=false; path=/';
+      }
+    }
+
+    async function getSecretPath() {
+      const res = await fetch('/robots.txt');
+      const text = await res.text();
+      const match = text.match(/Disallow:\s*(\S+)/i);
+      return match ? match[1] : '';
+    }
+
+    async function getAdminSecret() {
+      if (adminSecret !== null) return adminSecret;
+      const secretPath = await getSecretPath();
+      if (!secretPath) {
+        adminSecret = '';
+        return adminSecret;
+      }
+      const res = await fetch(secretPath);
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const tokenEl = doc.getElementById('token');
+      const encoded = tokenEl ? tokenEl.textContent.trim() : '';
+      adminSecret = encoded ? atob(encoded) : '';
+      return adminSecret;
+    }
+
+    async function checkAdmin() {
+      const secret = await getAdminSecret();
+      if (secret && getCookie('admin') === secret) {
+        localStorage.setItem('tforum_current_user', 'admin');
+        document.getElementById('admin-banner').classList.add('show');
+        await showAdminPanel();
+        enableAdminThreads();
+        return true;
+      }
+      return false;
+    }
+
+    function enableAdminThreads() {
+      const threads = document.querySelectorAll('[data-admin-link]');
+      threads.forEach((thread) => {
+        const link = thread.getAttribute('data-admin-link');
+        if (!link) return;
+        thread.setAttribute('href', link);
+        thread.setAttribute('aria-disabled', 'false');
+        thread.classList.remove('is-locked');
+        thread.classList.add('is-active');
+      });
+    }
+
+    async function showAdminPanel() {
+      document.getElementById('admin-panel').classList.add('show');
+      await loadFlag();
+    }
+
+    function closePanel() {
+      document.getElementById('admin-panel').classList.remove('show');
+    }
+
+    async function loadFlag() {
+      if (flagValue) return;
+      const res = await fetch('/flag.txt');
+      const text = await res.text();
+      flagValue = text.trim() || 'flag unavailable';
+      document.getElementById('flag-text').textContent = flagValue;
+    }
+
+    function copyFlag() {
+      if (!flagValue) return;
+      navigator.clipboard.writeText(flagValue);
+      const msg = document.getElementById('flag-copy-msg');
+      msg.style.opacity = '1';
+      setTimeout(() => msg.style.opacity = '0', 2000);
+    }
+
+    function addCurrentUser() {
+      const list = document.getElementById('active-users');
+      if (!list) return;
+      const username = localStorage.getItem('tforum_current_user');
+      if (!username) return;
+      const existingRow = Array.from(list.querySelectorAll('.user-row'))
+        .find((row) => row.textContent.trim() === username);
+      if (existingRow) {
+        existingRow.classList.add('me');
+        list.insertBefore(existingRow, list.firstChild);
+        return;
+      }
+      const row = document.createElement('div');
+      row.className = 'user-row me';
+      row.innerHTML = '<div class="dot"></div> ' + username;
+      list.insertBefore(row, list.firstChild);
+    }
+
+    function updateAuthLink() {
+      const link = document.getElementById('auth-link');
+      if (!link) return;
+      const username = localStorage.getItem('tforum_current_user');
+      if (!username) return;
+      link.textContent = '[ logout ]';
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        localStorage.removeItem('tforum_current_user');
+        window.location.href = 'index.html';
+      }, { once: true });
+    }
+
+    ensureAdminCookie();
+    checkAdmin().then(() => {
+      addCurrentUser();
+      updateAuthLink();
+    });
+  </script>
+
+</body>
+</html>

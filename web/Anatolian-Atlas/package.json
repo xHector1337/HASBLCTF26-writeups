@@ -1,0 +1,14 @@
+{
+  "name": "turkiye-bistro-ctf",
+  "version": "1.0.0",
+  "description": "CTF web challenge: restaurant map with login and review flow.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.17.3"
+  }
+}

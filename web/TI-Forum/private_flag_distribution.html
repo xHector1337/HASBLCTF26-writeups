@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>flag distribution thread — admin only</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+    :root {
+      --bg: #080808;
+      --bg2: #0e0e0e;
+      --border: #1e1e1e;
+      --green: #00ff41;
+      --muted: #444;
+      --text: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      padding: 2rem;
+      display: none;
+    }
+
+    .wrap { max-width: 860px; margin: 0 auto; }
+    h1 {
+      font-family: 'VT323', monospace;
+      color: var(--green);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+    .meta { font-size: 0.75rem; color: var(--muted); margin-bottom: 2rem; }
+    .post { background: var(--bg2); border: 1px solid var(--border); padding: 1rem 1.2rem; margin-bottom: 1rem; }
+    .post .author { color: var(--green); margin-bottom: 0.4rem; font-size: 0.75rem; }
+    .post .body { font-size: 0.85rem; line-height: 1.6; }
+    a { color: var(--muted); text-decoration: none; font-size: 0.75rem; }
+    a:hover { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="index.html">back to board</a>
+    <h1>flag distribution thread — admin only</h1>
+    <div class="meta">admin channel</div>
+
+    <div class="post">
+      <div class="author">admin</div>
+      <div class="body">No direct flag drops in public threads. Keep it clean.</div>
+    </div>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      const cookies = document.cookie.split(';');
+      for (let c of cookies) {
+        const parts = c.trim().split('=');
+        if (parts[0] === name) return parts[1] || '';
+      }
+      return '';
+    }
+
+    async function getSecretPath() {
+      const res = await fetch('/robots.txt');
+      const text = await res.text();
+      const match = text.match(/Disallow:\s*(\S+)/i);
+      return match ? match[1] : '';
+    }
+
+    async function getAdminSecret() {
+      const secretPath = await getSecretPath();
+      if (!secretPath) return '';
+      const res = await fetch(secretPath);
+      const text = await res.text();
+      const doc = new DOMParser().parseFromString(text, 'text/html');
+      const tokenEl = doc.getElementById('token');
+      const encoded = tokenEl ? tokenEl.textContent.trim() : '';
+      return encoded ? atob(encoded) : '';
+    }
+
+    async function requireAdmin() {
+      const secret = await getAdminSecret();
+      if (!secret || getCookie('admin') !== secret) {
+        window.location.href = 'index.html';
+        return;
+      }
+      document.body.style.display = 'block';
+    }
+
+    requireAdmin();
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+/* HINT #2: The Striker is Norwegian and plays in the Premier League. */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --pitch-green: #2d5a1b;
+  --pitch-light: #3a7a24;
+  --pitch-line: rgba(255,255,255,0.5);
+  --gold: #f0c040;
+  --gold-dim: #a07820;
+  --bg: #0e0e10;
+  --surface: #16161a;
+  --surface2: #1e1e24;
+  --text: #e8e8ec;
+  --text-dim: #6e6e7a;
+  --accent: #f0c040;
+  --danger: #e05252;
+  --success: #52e08a;
+  --radius: 6px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--surface2);
+  border-radius: 3px;
+}

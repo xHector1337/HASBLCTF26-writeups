@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="card" style="text-align: center; padding: 80px 20px; border-top: 3px solid #a3cf06;">
+    <h1 style="color: #fff; margin-bottom: 10px;">Thank you!</h1>
+    <p style="font-size: 18px; color: #c7d5e0;">Your transaction has been completed successfully.</p>
+    <div style="margin: 40px 0;">
+        <p>You can download your receipt here:</p>
+        <a href="/download_invoice" class="btn btn-green" style="padding: 15px 40px;">Download PDF Invoice</a>
+    </div>
+    <hr style="border: 0; border-top: 1px solid #333; margin: 40px 0;">
+    <a href="/" style="color: #67c1f5; text-decoration: none;">← Back to the Store</a>
+</div>
+{% endblock %}

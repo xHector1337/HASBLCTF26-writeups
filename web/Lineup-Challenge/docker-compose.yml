@@ -1,0 +1,8 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - CTF_FLAG=HASBL{7his_734m_C4n_Win_Ch4mpi0ns_L34gu3}
+    restart: unless-stopped
