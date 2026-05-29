@@ -1,0 +1,91 @@
+<%- include('partials/head', { title: 'Anatolian Atlas' }) %>
+<%- include('partials/nav', { user }) %>
+
+<main class="map-layout <%= selectedCity ? 'panel-open' : 'panel-closed' %>">
+  <section class="map-stage">
+    <p class="map-note">Click the red pins to rate restaurants.</p>
+    <!-- Hint: flag_info.txt exists somewhere outside the public docs. -->
+    <div class="map-shell">
+      <img class="turkiye-map" src="/files?path=turkiye.png" alt="Map of Turkiye" />
+      <div
+        class="pin-layer"
+        data-logged-in="<%= user ? 'true' : 'false' %>"
+        data-selected="<%= selectedCity %>"
+        data-error="<%= reviewError || '' %>"
+      >
+        <% restaurants.forEach((spot) => { %>
+          <button
+            class="pin"
+            type="button"
+            data-id="<%= spot.id %>"
+            data-city="<%= spot.city %>"
+            style="left:<%= spot.left %>%; top:<%= spot.top %>%"
+            aria-label="<%= spot.city %>"
+          ></button>
+        <% }) %>
+      </div>
+    </div>
+  </section>
+
+  <aside
+    class="detail-panel <%= selectedCity ? '' : 'is-hidden' %>"
+    id="detailPanel"
+    data-logged-in="<%= user ? 'true' : 'false' %>"
+    data-selected="<%= selectedCity %>"
+    data-error="<%= reviewError || '' %>"
+  >
+    <div class="panel-content" id="panelContent" hidden>
+      <div class="panel-title">
+        <h2 id="panelName"></h2>
+        <button class="ghost" id="panelBack" type="button">Back</button>
+      </div>
+
+      <div class="flag-banner" id="panelFlag" hidden>
+        Flag: <span></span>
+      </div>
+
+      <div class="alert" id="panelError" hidden></div>
+
+      <form class="review-form" id="reviewForm" method="post" action="">
+        <div class="rating-field">
+          <span class="rating-label" id="service-label">Service</span>
+          <div class="star-rating" role="radiogroup" aria-labelledby="service-label">
+            <% for (let i = 5; i >= 1; i--) { %>
+              <input id="service-<%= i %>" type="radio" name="service" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+              <label for="service-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="rating-field">
+          <span class="rating-label" id="food-label">Food</span>
+          <div class="star-rating" role="radiogroup" aria-labelledby="food-label">
+            <% for (let i = 5; i >= 1; i--) { %>
+              <input id="food-<%= i %>" type="radio" name="food" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+              <label for="food-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+            <% } %>
+          </div>
+        </div>
+
+        <div class="rating-field">
+          <span class="rating-label" id="hygiene-label">Hygiene</span>
+          <div class="star-rating" role="radiogroup" aria-labelledby="hygiene-label">
+            <% for (let i = 5; i >= 1; i--) { %>
+              <input id="hygiene-<%= i %>" type="radio" name="hygiene" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+              <label for="hygiene-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+            <% } %>
+          </div>
+        </div>
+
+        <label for="comment">Comment</label>
+        <textarea id="comment" name="comment" rows="4" required></textarea>
+
+        <button class="primary" type="submit">Submit review</button>
+      </form>
+
+      <div class="review-list" id="reviewList"></div>
+    </div>
+  </aside>
+</main>
+
+<%- include('partials/footer') %>

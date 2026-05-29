@@ -1,0 +1,89 @@
+<%- include('partials/head', { title: restaurant.name }) %>
+<%- include('partials/nav', { user }) %>
+
+<main class="restaurant">
+  <section class="restaurant-hero">
+    <div>
+      <p class="eyebrow"><%= restaurant.city %></p>
+      <h1><%= restaurant.name %></h1>
+      <p class="lede">Rate the local experience and share your notes.</p>
+    </div>
+    <a class="ghost" href="/">Back to map</a>
+  </section>
+
+  <% if (flag) { %>
+    <div class="flag-banner">Flag: <span><%= flag %></span></div>
+  <% } %>
+
+  <% if (typeof error !== 'undefined') { %>
+    <p class="alert"><%= error %></p>
+  <% } %>
+
+  <section class="review-grid">
+    <div class="review-form">
+      <h2>Leave a review</h2>
+      <% if (!user) { %>
+        <p class="muted">You must log in to leave a review.</p>
+        <a class="primary" href="/login?next=/restaurant/<%= restaurant.id %>">Log in</a>
+      <% } else { %>
+        <form method="post" action="/review/<%= restaurant.id %>">
+          <div class="rating-field">
+            <span class="rating-label" id="service-label">Service</span>
+            <div class="star-rating" role="radiogroup" aria-labelledby="service-label">
+              <% for (let i = 5; i >= 1; i--) { %>
+                <input id="service-<%= i %>" type="radio" name="service" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+                <label for="service-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="rating-field">
+            <span class="rating-label" id="food-label">Food</span>
+            <div class="star-rating" role="radiogroup" aria-labelledby="food-label">
+              <% for (let i = 5; i >= 1; i--) { %>
+                <input id="food-<%= i %>" type="radio" name="food" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+                <label for="food-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+              <% } %>
+            </div>
+          </div>
+
+          <div class="rating-field">
+            <span class="rating-label" id="hygiene-label">Hygiene</span>
+            <div class="star-rating" role="radiogroup" aria-labelledby="hygiene-label">
+              <% for (let i = 5; i >= 1; i--) { %>
+                <input id="hygiene-<%= i %>" type="radio" name="hygiene" value="<%= i %>" <%= i === 5 ? 'required' : '' %> />
+                <label for="hygiene-<%= i %>" aria-label="<%= i %> star<%= i > 1 ? 's' : '' %>">&#9733;</label>
+              <% } %>
+            </div>
+          </div>
+
+          <label for="comment">Comment</label>
+          <textarea id="comment" name="comment" rows="4" required></textarea>
+
+          <button class="primary" type="submit">Submit review</button>
+        </form>
+      <% } %>
+    </div>
+
+    <div class="review-list">
+      <h2>Recent reviews</h2>
+      <% if (!reviews.length) { %>
+        <p class="muted">No reviews yet. Be the first to share a score.</p>
+      <% } %>
+      <% reviews.forEach((review) => { %>
+        <article class="review">
+          <header>
+            <strong><%= review.user %></strong>
+            <span class="muted"><%= new Date(review.createdAt).toLocaleString('en-US') %></span>
+          </header>
+          <p class="score">
+            Service <%= review.service %> · Food <%= review.food %> · Hygiene <%= review.hygiene %>
+          </p>
+          <p><%= review.comment %></p>
+        </article>
+      <% }) %>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

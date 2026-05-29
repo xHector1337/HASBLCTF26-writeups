@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DTeam Store</title>
+    <style>
+        :root { --steam-blue: #1b2838; --steam-dark: #171a21; --steam-light: #c7d5e0; --steam-green: #5c7e10; }
+        body { background-color: var(--steam-blue); color: var(--steam-light); font-family: Arial, sans-serif; margin: 0; }
+        nav { background-color: var(--steam-dark); padding: 15px 10%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #000; }
+        .logo { font-size: 26px; font-weight: bold; color: #fff; text-decoration: none; letter-spacing: 2px; }
+        .nav-right a, .nav-right span { color: #b8b6b4; text-decoration: none; margin-left: 20px; font-size: 14px; }
+        .nav-right a:hover { color: #fff; }
+        .container { padding: 40px 10%; max-width: 1100px; margin: auto; }
+        .btn { background: #67c1f5; color: white; border: none; padding: 10px 20px; cursor: pointer; text-decoration: none; border-radius: 2px; font-size: 14px; }
+        .btn-green { background: var(--steam-green); }
+        .btn-green:hover { background: #8ed000; }
+        .card { background: rgba(0,0,0,0.4); padding: 25px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); }
+        input { background: #32353c; border: 1px solid #000; padding: 12px; color: white; width: 100%; box-sizing: border-box; margin-bottom: 15px; border-radius: 3px; }
+        
+        #toast {
+            visibility: hidden; min-width: 250px; background-color: #a34e4e; color: #fff; text-align: center;
+            border-radius: 3px; padding: 16px; position: fixed; z-index: 1; right: 30px; bottom: 30px;
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">DTEAM</a>
+        <div class="nav-right">
+            {% if current_user %}
+                <span style="color: #66c0f4;">{{ current_user.username }}</span>
+                <span style="color: #a3cf06;">${{ "%.2f"|format(current_user.balance) }}</span>
+                <a href="/cart">Cart</a>
+                <a href="/messages">Messages</a>
+                <a href="/codes">Redeem</a>
+                <a href="/logout">Logout</a>
+            {% else %}
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+    <div id="toast">Error Message</div>
+    <script>
+        function showToast(msg) {
+            var x = document.getElementById("toast");
+            x.innerHTML = msg;
+            x.className = "show";
+            setTimeout(function(){ x.className = x.className.replace("show", ""); }, 3000);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1200px 800px at 15% 20%, rgba(120, 80, 255, 0.25), transparent 60%),
+    radial-gradient(900px 700px at 85% 25%, rgba(80, 200, 255, 0.18), transparent 60%),
+    linear-gradient(180deg, #0a0b12 0%, #05060c 100%);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+#root {
+  min-height: 100svh;
+}
+
+button {
+  font: inherit;
+}

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>picoCTF 2026 writeups — drop yours here</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+    :root {
+      --bg: #080808;
+      --bg2: #0e0e0e;
+      --bg3: #141414;
+      --border: #1e1e1e;
+      --green: #00ff41;
+      --muted: #444;
+      --text: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .wrap {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-family: 'VT323', monospace;
+      color: var(--green);
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .post {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .post .author {
+      color: var(--green);
+      margin-bottom: 0.4rem;
+      font-size: 0.75rem;
+    }
+
+    .post .body {
+      font-size: 0.85rem;
+      line-height: 1.6;
+    }
+
+    .reply-box {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 1rem 1.2rem;
+      margin-top: 2rem;
+    }
+
+    .reply-box label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .reply-box textarea {
+      width: 100%;
+      min-height: 110px;
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-family: 'Share Tech Mono', monospace;
+      padding: 0.6rem 0.8rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .reply-box button {
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 1.2rem;
+      cursor: pointer;
+    }
+
+    .reply-box button:hover { color: var(--green); border-color: var(--green); }
+
+    .reply-msg {
+      margin-top: 0.6rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    a { color: var(--muted); text-decoration: none; font-size: 0.75rem; }
+    a:hover { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <a href="index.html">back to board</a>
+    <h1>picoCTF 2026 writeups — drop yours here</h1>
+    <div class="meta">thread by bitflip · 5h ago</div>
+
+    <div class="post">
+      <div class="author">interr</div>
+      <div class="body">Does someone have writeup for paper-2?</div>
+    </div>
+
+    <div class="post">
+      <div class="author">shade</div>
+      <div class="body">Still collecting. Post links if you have solid notes.</div>
+    </div>
+
+    <div class="reply-box">
+      <label for="reply-input">add reply</label>
+      <textarea id="reply-input" placeholder="write a reply..."></textarea>
+      <button id="reply-btn">post reply</button>
+      <div class="reply-msg" id="reply-msg"></div>
+    </div>
+
+    <div id="user-replies"></div>
+  </div>
+
+  <script>
+    const storageKey = 'tforum_replies_picoctf_2026';
+    const replyInput = document.getElementById('reply-input');
+    const replyBtn = document.getElementById('reply-btn');
+    const replyMsg = document.getElementById('reply-msg');
+    const repliesContainer = document.getElementById('user-replies');
+
+    function getCurrentUser() {
+      return localStorage.getItem('tforum_current_user');
+    }
+
+    function loadReplies() {
+      const raw = localStorage.getItem(storageKey);
+      if (!raw) return [];
+      try {
+        const list = JSON.parse(raw);
+        return Array.isArray(list) ? list : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveReplies(list) {
+      localStorage.setItem(storageKey, JSON.stringify(list));
+    }
+
+    function renderReplies() {
+      repliesContainer.innerHTML = '';
+      const replies = loadReplies();
+      replies.forEach((reply) => {
+        const post = document.createElement('div');
+        post.className = 'post';
+        post.innerHTML = '<div class="author">' + reply.author + '</div>' +
+          '<div class="body">' + reply.body + '</div>';
+        repliesContainer.appendChild(post);
+      });
+    }
+
+    replyBtn.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) {
+        replyMsg.textContent = 'login required to reply';
+        return;
+      }
+      const text = replyInput.value.trim();
+      if (!text) {
+        replyMsg.textContent = 'reply cannot be empty';
+        return;
+      }
+      const replies = loadReplies();
+      replies.push({ author: user, body: text });
+      saveReplies(replies);
+      replyInput.value = '';
+      replyMsg.textContent = 'posted.';
+      renderReplies();
+    });
+
+    renderReplies();
+  </script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DTeam - Join the Community</title>
+    <style>
+        body {
+            background-color: #1b2838;
+            color: #c7d5e0;
+            font-family: "Motiva Sans", Arial, Helvetica, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .register-box {
+            background: rgba(23, 26, 33, 0.9);
+            padding: 40px;
+            border-radius: 4px;
+            width: 400px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        h2 { color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            background: #32353c;
+            border: 1px solid #000;
+            color: #fff;
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(to right, #47bfff 0%, #1a44c2 100%);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button:hover { brightness: 1.2; }
+        a { color: #66c0f4; text-decoration: none; font-size: 14px; }
+        
+        /* Toast Bildirim Stili */
+        #toast {
+            visibility: hidden;
+            min-width: 300px;
+            background-color: #d32f2f;
+            color: #fff;
+            text-align: center;
+            border-radius: 4px;
+            padding: 16px;
+            position: fixed;
+            z-index: 1000;
+            right: 30px;
+            bottom: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2.5s; }
+        @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
+        @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
+    </style>
+</head>
+<body>
+
+<div class="register-box">
+    <h2>Create Account</h2>
+    <form id="registerForm">
+        <input type="text" name="username" placeholder="Username (Min 6 chars)" required>
+        <input type="password" name="password" placeholder="Password (Min 6 chars)" required>
+        <button type="submit">REGISTER</button>
+    </form>
+    <p style="margin-top: 20px;">Already a member? <a href="/login">Sign in</a></p>
+</div>
+
+<div id="toast"></div>
+
+<script>
+    function showToast(msg) {
+        const x = document.getElementById("toast");
+        x.innerHTML = msg;
+        x.className = "show";
+        setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+    }
+
+    document.getElementById('registerForm').onsubmit = async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const response = await fetch('/register', { method: 'POST', body: formData });
+        const result = await response.json();
+        
+        if (response.ok && result.success) {
+            window.location.href = '/login';
+        } else {
+            showToast(result.msg || "Registration failed!");
+        }
+    };
+</script>
+
+</body>
+</html>

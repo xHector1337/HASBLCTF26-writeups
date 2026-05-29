@@ -1,0 +1,25 @@
+<%- include('partials/head', { title: 'Login' }) %>
+<%- include('partials/nav', { user }) %>
+
+<main class="form-shell">
+  <section class="form-card">
+    <h1>Welcome back</h1>
+    <p class="muted">Log in to rate service, food, and hygiene.</p>
+
+    <% if (typeof error !== 'undefined') { %>
+      <p class="alert"><%= error %></p>
+    <% } %>
+
+    <form method="post" action="/login">
+      <label for="username">Username</label>
+      <input id="username" name="username" type="text" placeholder="foodie_ankara" />
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" placeholder="6+ characters" />
+      <input type="hidden" name="next" value="<%= next %>" />
+      <button class="primary" type="submit">Sign in</button>
+    </form>
+    <p class="muted">Need an account? <a class="ghost" href="/register?next=<%= next %>">Register</a></p>
+  </section>
+</main>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Your Shopping Cart</h2>
+<div style="display: flex; gap: 30px; align-items: flex-start;">
+    <div style="flex: 2;">
+        {% for item in items %}
+        <div class="card" style="display: flex; align-items: center; gap: 20px; margin-bottom: 15px;">
+            <img src="{{item.image}}" style="width: 140px; border-radius: 4px;">
+            <div style="flex-grow: 1;">
+                <h3 style="margin: 0;">{{item.name}}</h3>
+                <p style="color: #66c0f4;">Digital License</p>
+            </div>
+            <span style="font-size: 18px;">${{item.price}}</span>
+            <a href="/cart/remove/{{item.id}}" class="btn" style="background: #a34e4e; padding: 6px 12px; font-size: 12px;">Remove</a>
+        </div>
+        {% else %}
+        <div class="card">Your cart is empty.</div>
+        {% endfor %}
+    </div>
+    
+    <div style="flex: 1;">
+        <div class="card">
+            <h3>Summary</h3>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                <span>Subtotal:</span>
+                <span>${{ "%.2f"|format(total) }}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 20px; color: #a3cf06;">
+                <span>Wallet:</span>
+                <span>${{ "%.2f"|format(current_user.balance) }}</span>
+            </div>
+            <button onclick="pay()" class="btn btn-green" style="width: 100%; font-weight: bold; padding: 15px;">Purchase</button>
+        </div>
+    </div>
+</div>
+<script>
+function pay() {
+    fetch('/checkout', { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+        if(d.success) window.location.href='/success';
+        else showToast(d.msg);
+    });
+}
+</script>
+{% endblock %}

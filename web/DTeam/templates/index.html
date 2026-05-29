@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2 style="text-transform: uppercase; letter-spacing: 2px; margin-bottom: 25px; color: #fff; border-bottom: 2px solid #66c0f4; padding-bottom: 10px;">
+    Featured & Recommended
+</h2>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px;">
+    {% for game in games %}
+    <div class="card" style="background: rgba(23, 26, 33, 0.8); border: 1px solid #2a475e; border-radius: 0; padding: 20px; transition: background 0.3s;">
+        <div style="display: flex; flex-direction: column; height: 100%; justify-content: space-between;">
+            <div>
+                <h3 style="margin: 0 0 15px 0; color: #66c0f4; font-size: 1.4em; min-height: 50px;">
+                    {{game.name}}
+                </h3>
+            </div>
+            
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0000004d; padding: 10px; border-radius: 2px;">
+                <div style="display: flex; flex-direction: column;">
+                    <span style="font-size: 10px; color: #8f98a0; text-transform: uppercase;">Price</span>
+                    <span style="color: #a3cf06; font-weight: bold; font-size: 1.1em;">
+                        {% if game.price == 0 %}
+                            Free to Play
+                        {% else %}
+                            ${{game.price}}
+                        {% endif %}
+                    </span>
+                </div>
+                {% if current_user and game.id in purchased_ids %}
+                    <span class="btn" style="background: #3c3f43; color: #b8b6b4; padding: 8px 15px; border-radius: 2px; text-decoration: none; font-size: 14px; font-weight: bold; cursor: not-allowed;">
+                        Purchased
+                    </span>
+                {% else %}
+                    <a href="/cart/add/{{game.id}}" class="btn" style="background: linear-gradient( to right, #75b022 5%, #588a1b 95%); color: #fff; padding: 8px 15px; border-radius: 2px; text-decoration: none; font-size: 14px; font-weight: bold;">
+                        Add to Cart
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<style>
+    .card:hover {
+        background: rgba(42, 71, 94, 0.5) !important;
+        border-color: #66c0f4 !important;
+    }
+</style>
+{% endblock %}

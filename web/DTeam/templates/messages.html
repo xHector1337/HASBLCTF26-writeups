@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>System Messages</h2>
+{% for msg in msgs %}
+<div class="card">{{ msg.content }}</div>
+{% endfor %}
+{% endblock %}

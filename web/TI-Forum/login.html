@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>T/I Forum — Login</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+
+    :root {
+      --bg: #080808;
+      --bg2: #0e0e0e;
+      --bg3: #141414;
+      --border: #1e1e1e;
+      --green: #00ff41;
+      --red: #ff3333;
+      --muted: #444;
+      --text: #cccccc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      padding: 2rem;
+      box-shadow: 0 0 30px rgba(0,255,65,0.08);
+    }
+
+    h1 {
+      font-family: 'VT323', monospace;
+      font-size: 2rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .sub {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      margin-bottom: 1rem;
+      background: var(--bg3);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    button {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border: 1px solid var(--border);
+      background: none;
+      color: var(--text);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    button:hover { color: var(--green); border-color: var(--green); }
+
+    .msg {
+      min-height: 1.2rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 1rem;
+    }
+
+    .msg.error { color: var(--red); }
+
+    .back {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .back:hover { color: var(--green); }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>T/I Forum</h1>
+    <div class="sub">register or login to appear in active users</div>
+
+    <div id="auth-form">
+      <label for="username">username</label>
+      <input id="username" type="text" autocomplete="off" />
+
+      <label for="password">password</label>
+      <input id="password" type="password" autocomplete="off" />
+
+      <div class="row">
+        <button id="register">register</button>
+        <button id="login">login</button>
+      </div>
+    </div>
+
+    <div id="logout-panel" style="display:none;">
+      <div class="row">
+        <button id="logout">logout</button>
+      </div>
+    </div>
+
+    <div class="msg" id="msg"></div>
+    <a class="back" href="index.html">back to board</a>
+  </div>
+
+  <script>
+    const msg = document.getElementById('msg');
+    const usernameEl = document.getElementById('username');
+    const passwordEl = document.getElementById('password');
+    const authForm = document.getElementById('auth-form');
+    const logoutPanel = document.getElementById('logout-panel');
+    const logoutBtn = document.getElementById('logout');
+
+    function loadUsers() {
+      const raw = localStorage.getItem('tforum_users');
+      if (!raw) return [];
+      try {
+        const list = JSON.parse(raw);
+        return Array.isArray(list) ? list : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveUsers(users) {
+      localStorage.setItem('tforum_users', JSON.stringify(users));
+    }
+
+    function setMessage(text, isError) {
+      msg.textContent = text;
+      msg.className = 'msg' + (isError ? ' error' : '');
+    }
+
+    function getInputs() {
+      return {
+        username: usernameEl.value.trim(),
+        password: passwordEl.value.trim()
+      };
+    }
+
+    function showLogout() {
+      authForm.style.display = 'none';
+      logoutPanel.style.display = 'block';
+      const username = localStorage.getItem('tforum_current_user');
+      if (username) {
+        setMessage('logged in as ' + username, false);
+      }
+    }
+
+    function showAuth() {
+      authForm.style.display = 'block';
+      logoutPanel.style.display = 'none';
+    }
+
+    document.getElementById('register').addEventListener('click', () => {
+      const { username, password } = getInputs();
+      if (!username || !password) {
+        setMessage('username and password required', true);
+        return;
+      }
+      if (username.toLowerCase() === 'admin') {
+        setMessage('admin is reserved', true);
+        return;
+      }
+      if (username.length < 6 || password.length < 6) {
+        setMessage('username and password must be longer than 6 chars', true);
+        return;
+      }
+      const users = loadUsers();
+      const exists = users.some((u) => u.username === username);
+      if (exists) {
+        setMessage('user already exists', true);
+        return;
+      }
+      users.push({ username, password });
+      saveUsers(users);
+      localStorage.setItem('tforum_current_user', username);
+      setMessage('account created, redirecting...', false);
+      setTimeout(() => { window.location.href = 'index.html'; }, 600);
+    });
+
+    document.getElementById('login').addEventListener('click', () => {
+      const { username, password } = getInputs();
+      if (!username || !password) {
+        setMessage('username and password required', true);
+        return;
+      }
+      const users = loadUsers();
+      const user = users.find((u) => u.username === username && u.password === password);
+      if (!user) {
+        setMessage('invalid credentials', true);
+        return;
+      }
+      localStorage.setItem('tforum_current_user', username);
+      setMessage('login success, redirecting...', false);
+      setTimeout(() => { window.location.href = 'index.html'; }, 600);
+    });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem('tforum_current_user');
+      setMessage('logged out', false);
+      showAuth();
+    });
+
+    if (localStorage.getItem('tforum_current_user')) {
+      showLogout();
+    }
+  </script>
+</body>
+</html>

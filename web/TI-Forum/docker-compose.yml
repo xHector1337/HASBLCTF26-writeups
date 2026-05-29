@@ -1,0 +1,5 @@
+services:
+  forum:
+    image: forumfinal
+    ports:
+      - "8080:80"

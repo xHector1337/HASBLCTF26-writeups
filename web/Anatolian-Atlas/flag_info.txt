@@ -1,0 +1,7 @@
+If you can read this file, you are close.
+
+To reveal the flag:
+- Go to the Kayseri restaurant.
+- Set service to 3, food to 5, and hygiene to 4.
+- Write the comment exactly as: "Give me the flag!"
+- Submit the review to reveal the flag.
