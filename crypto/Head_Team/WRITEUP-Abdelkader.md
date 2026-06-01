@@ -227,12 +227,12 @@ title is the hint, and the flag is the confession.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Re-implements
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/head-team/solve.py) — argparse-driven solver. Re-implements
   the two-LFSR Galois keystream in Python, applies `socket.htonl` to
   match the C side's byte-swap on little-endian hosts, hex-decodes
   the `.enc` file, XORs and prints the flag. Standard library only.
-* [`handout/chall.c`](./handout/chall.c) — original C source.
-* [`handout/flag.enc`](./handout/flag.enc) — the hex-ASCII
+* [`handout/chall.c`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/head-team/handout/chall.c) — original C source.
+* [`handout/flag.enc`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/head-team/handout/flag.enc) — the hex-ASCII
   ciphertext.
 
 ## Requirements

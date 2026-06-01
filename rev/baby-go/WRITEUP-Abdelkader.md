@@ -155,7 +155,7 @@ b'HASBL{B4BY_G0L4NG_1111}'
 
 ## Exploit
 
-Two implementations live in [`solve.py`](./solve.py):
+Two implementations live in [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/baby-go/solve.py):
 
 * **`--method static`** — walk the ELF program headers, translate the
   hard-coded VA `0x004baf62` to a file offset, read 32 bytes, base64
@@ -211,10 +211,10 @@ Decoded: "BABY GOLANG 1111". Matches the *baby-go* challenge name.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/baby-go/solve.py) — argparse-driven solver. Defaults to the
   static ELF-parse path; `--method grep` works on any blob containing
   base64.
-* [`handout/main`](./handout/main) — original Linux x86-64 Go binary.
+* [`handout/main`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/baby-go/handout/main) — original Linux x86-64 Go binary.
 
 ## Requirements
 

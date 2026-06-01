@@ -211,11 +211,11 @@ title-drop of Aphelios.)
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Patches the magic
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/magic-numbers/solve.py) — argparse-driven solver. Patches the magic
   in-memory, writes the repaired JPEG, walks the segment chain by hand
   to find the XMP, then pulls the `xmpRights:UsageTerms` value and
   base64-decodes it. Standard library only.
-* [`handout/Aphelios.bin`](./handout/Aphelios.bin) — original file with
+* [`handout/Aphelios.bin`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/magic-numbers/handout/Aphelios.bin) — original file with
   the corrupted header.
 
 ## Requirements

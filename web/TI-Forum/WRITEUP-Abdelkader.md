@@ -234,21 +234,21 @@ publish to every visitor, the gate is decoration*.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Standard-library
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/solve.py) — argparse-driven solver. Standard-library
   only (`urllib.request`, `base64`, `re`). Fetches `/robots.txt`,
   extracts the `Disallow:` path, pulls the `#token` element out of
   that page, base64-decodes it, and re-fetches `/flag.txt` with the
   resulting `Cookie: admin=…` header. Supports `--url` for replaying
   against a different instance.
-* [`handout/index.html`](./handout/index.html) — the public board
+* [`handout/index.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/handout/index.html) — the public board
   page; the JS chain is in the inline `<script>` near the end.
-* [`handout/robots.txt`](./handout/robots.txt) — two lines, the
+* [`handout/robots.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/handout/robots.txt) — two lines, the
   second of which is the breadcrumb.
-* [`handout/secret_page.html`](./handout/secret_page.html) — the
+* [`handout/secret_page.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/handout/secret_page.html) — the
   "403 Forbidden" page whose `#token` element carries the base64
   admin secret.
-* [`handout/private_internal.html`](./handout/private_internal.html),
-  [`handout/private_flag_distribution.html`](./handout/private_flag_distribution.html)
+* [`handout/private_internal.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/handout/private_internal.html),
+  [`handout/private_flag_distribution.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/ti-forum/handout/private_flag_distribution.html)
   — the two decoy threads, captured to show that the lock is
   cosmetic and the contents carry no flag.
 

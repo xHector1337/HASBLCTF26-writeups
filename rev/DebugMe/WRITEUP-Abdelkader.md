@@ -247,7 +247,7 @@ print(bytes(b ^ 0x4A for b in cipher).decode())
 # HASBL{y0u_d3bugg3d_m3_pr377y_g00d}
 ```
 
-[`solve.py`](./solve.py) ships two methods. `--method hardcoded` does
+[`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/DebugMe/solve.py) ships two methods. `--method hardcoded` does
 the obvious thing. `--method scan` (the default) goes further — it
 greps the PE for the `(?:\xC6\x45..){30,}` opcode run, pulls the 4th
 byte of each `mov byte [rbp+disp8], imm8`, and locates the XOR key by
@@ -297,10 +297,10 @@ HASBL{y0u_d3bugg3d_m3_pr377y_g00d}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. `--method scan`
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/DebugMe/solve.py) — argparse-driven solver. `--method scan`
   (default) scans the PE for the opcode run; `--method hardcoded`
   uses the constants pulled out of the disasm.
-* [`handout/DebugMe.exe`](./handout/DebugMe.exe) — original Win64 PE.
+* [`handout/DebugMe.exe`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/DebugMe/handout/DebugMe.exe) — original Win64 PE.
 
 ## Requirements
 

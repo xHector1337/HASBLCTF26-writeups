@@ -306,10 +306,10 @@ landing.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Crafts the 7-byte
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/jumper/solve.py) — argparse-driven solver. Crafts the 7-byte
   `mov edx, 0x401284 ; nop ; nop`, sends it over the socket, then
   drops `id; cat flag*; exit` into the shell. Standard library only.
-* [`handout/jumper`](./handout/jumper) — the original challenge binary.
+* [`handout/jumper`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/jumper/handout/jumper) — the original challenge binary.
 
 ## Requirements
 

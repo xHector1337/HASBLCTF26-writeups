@@ -222,11 +222,11 @@ challenge a one-line modular inverse.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Parses the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/script-kiddie/solve.py) — argparse-driven solver. Parses the
   debug row out of `output.txt`, multiplies each element by `147`
   (mod 256), prints the flag. Standard library only.
-* [`handout/chall.py`](./handout/chall.py) — original encryptor.
-* [`handout/output.txt`](./handout/output.txt) — the ciphertext +
+* [`handout/chall.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/script-kiddie/handout/chall.py) — original encryptor.
+* [`handout/output.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/script-kiddie/handout/output.txt) — the ciphertext +
   debug-print output.
 
 ## Requirements

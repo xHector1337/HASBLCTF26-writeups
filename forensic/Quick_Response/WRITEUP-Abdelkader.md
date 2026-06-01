@@ -31,7 +31,7 @@ JPEG image data, JFIF standard 1.01, density 96x96, comment:
 baseline, precision 8, 222x222, components 3
 ```
 
-![](handout/QR_Code_Holy)
+![](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/quick-response/handout/QR_Code_Holy)
 
 ## TL;DR
 
@@ -152,9 +152,9 @@ was famous for — endless rapid-fire monologues on his livestreams.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/quick-response/solve.py) — argparse-driven solver. Defaults to
   `handout/QR_Code_Holy`; uses pyzbar + Pillow.
-* [`handout/QR_Code_Holy`](./handout/QR_Code_Holy) — original JPEG.
+* [`handout/QR_Code_Holy`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/quick-response/handout/QR_Code_Holy) — original JPEG.
 
 ## Requirements
 

@@ -205,13 +205,13 @@ HASBL{0BFU5C473D_3NCRYP710N}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Reads
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-obfuscation/solve.py) — argparse-driven solver. Reads
   `output.txt`, builds the per-byte inversion table, strips the
   56-byte literal prefix, reconstructs the 28-byte plaintext from the
   reversed-second-half + first-half layout, prints the flag. Standard
   library only.
-* [`handout/chall.py`](./handout/chall.py) — original encryptor.
-* [`handout/output.txt`](./handout/output.txt) — the ciphertext list.
+* [`handout/chall.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-obfuscation/handout/chall.py) — original encryptor.
+* [`handout/output.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-obfuscation/handout/output.txt) — the ciphertext list.
 
 ## Requirements
 

@@ -151,10 +151,10 @@ HASBL{Istanbul_1s_b3atiful_c1ty}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Reads the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/digits/solve.py) — argparse-driven solver. Reads the
   ASCII bit stream, packs MSB-first into bytes, writes the JPEG,
   prints the (known) flag for convenience. Standard library only.
-* [`handout/digits.bin`](./handout/digits.bin) — original
+* [`handout/digits.bin`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/digits/handout/digits.bin) — original
   bit-serialised JPEG.
 
 ## Requirements

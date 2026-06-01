@@ -295,10 +295,10 @@ HASBL{Turk1sh_D3l1ght_15_Th3_B35t}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/candy-store/solve.py) — argparse-driven solver. Defaults to the
   live remote; `--batch` and `--drain` tune the back-pressure
   workaround.
-* [`handout/main`](./handout/main) — original ELF.
+* [`handout/main`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/candy-store/handout/main) — original ELF.
 
 ## Requirements
 

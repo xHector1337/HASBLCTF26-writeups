@@ -139,11 +139,11 @@ the loop reads its own secret.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Reads
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-walking/solve.py) — argparse-driven solver. Reads
   `output.txt`, splits on whitespace, inverts each token, prints the
   flag. Standard library only.
-* [`handout/chall.py`](./handout/chall.py) — original encryptor.
-* [`handout/output.txt`](./handout/output.txt) — the space-separated
+* [`handout/chall.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-walking/handout/chall.py) — original encryptor.
+* [`handout/output.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-learns-walking/handout/output.txt) — the space-separated
   hex tokens.
 
 ## Requirements

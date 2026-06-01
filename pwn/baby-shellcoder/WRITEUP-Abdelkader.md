@@ -231,9 +231,9 @@ The greeting string and the flag are the same joke — Solid Snake's
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/baby-shellcoder/solve.py) — argparse-driven solver. Defaults to the
   live remote; standard library only (no pwntools dep).
-* [`handout/main`](./handout/main) — original ELF.
+* [`handout/main`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/baby-shellcoder/handout/main) — original ELF.
 
 ## Requirements
 

@@ -154,11 +154,11 @@ hasbl{F1NG3R_C0UN7IN6_15_1N5I6H7FUL}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Reads `output.txt`,
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-counting-fingers/solve.py) — argparse-driven solver. Reads `output.txt`,
   parses the python-list-of-ints literally, brute-forces each position
   over `[0x20, 0x7E]`, prints the flag. Standard library only.
-* [`handout/chall.py`](./handout/chall.py) — original encryptor.
-* [`handout/output.txt`](./handout/output.txt) — the ciphertext list.
+* [`handout/chall.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-counting-fingers/handout/chall.py) — original encryptor.
+* [`handout/output.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/baby-counting-fingers/handout/output.txt) — the ciphertext list.
 
 ## Requirements
 

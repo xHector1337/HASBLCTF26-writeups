@@ -177,10 +177,10 @@ maths/CS teachers who organised the CTF. That's the wink.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Walks the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/logo/solve.py) — argparse-driven solver. Walks the
   APP1/TIFF/IFD chain by hand (no Pillow dependency); `--show-decoy`
   also prints the base32 wink.
-* [`handout/HASBL_Logo.jpg`](./handout/HASBL_Logo.jpg) — original
+* [`handout/HASBL_Logo.jpg`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/logo/handout/HASBL_Logo.jpg) — original
   JPEG.
 
 ## Requirements

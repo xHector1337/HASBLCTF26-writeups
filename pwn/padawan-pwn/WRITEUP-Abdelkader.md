@@ -368,10 +368,10 @@ HASBL{M4Y_7H3_F0RC3_B3_W17H_Y0U}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Builds the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/padawan-pwn/solve.py) — argparse-driven solver. Builds the
   3-pop-plus-alignment-ret ROP chain, sends it over the socket, prints
   the flag returned by `strike`'s `puts`. Standard library only.
-* [`handout/padawan`](./handout/padawan) — the original challenge
+* [`handout/padawan`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/pwn/padawan-pwn/handout/padawan) — the original challenge
   binary.
 
 ## Requirements

@@ -259,7 +259,7 @@ after cheat: Dmg=99999
 
 ## Exploit
 
-The solver in [`solve.py`](./solve.py) automates the whole loop and
+The solver in [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/PamukTheCat/solve.py) automates the whole loop and
 retries on `"You have lost the fight!"`. End-to-end:
 
 ```python
@@ -319,10 +319,10 @@ HASBL{P4MUK_TH3_M4ST3R_H4CK3R}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/PamukTheCat/solve.py) — argparse-driven solver. Defaults to
   `nc 34.77.68.154 10103`, with `--attempts`, `--max-fights`, and
   `--fight-spacing` knobs.
-* [`handout/main`](./handout/main) — original ELF.
+* [`handout/main`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/PamukTheCat/handout/main) — original ELF.
 
 ## Requirements
 

@@ -299,23 +299,23 @@ challenge whose pins are spread across Anatolia.)
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Registers a
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/solve.py) — argparse-driven solver. Registers a
   random user, logs in, traverses `/files?path=../../flag_info.txt`
   to confirm the leak, posts the magic review to `/review/kayseri`,
   reads `/api/restaurant/kayseri`, and prints the flag.
   Standard-library only (`urllib.request`, `http.cookiejar`).
-* [`handout/index_anon.http`](./handout/index_anon.http) — the
+* [`handout/index_anon.http`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/index_anon.http) — the
   anonymous homepage response (headers + body).
-* [`handout/index_auth.html`](./handout/index_auth.html) — the
+* [`handout/index_auth.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/index_auth.html) — the
   authenticated homepage with the
   `<!-- Hint: flag_info.txt … -->` comment.
-* [`handout/app.js`](./handout/app.js) — the front-end JS describing
+* [`handout/app.js`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/app.js) — the front-end JS describing
   the API surface (`/api/restaurant/:id`, `/review/:id`, the
   `panelFlag` field).
-* [`handout/login.html`](./handout/login.html),
-  [`handout/register.html`](./handout/register.html) — the auth
+* [`handout/login.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/login.html),
+  [`handout/register.html`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/register.html) — the auth
   forms.
-* [`handout/flag_info.txt`](./handout/flag_info.txt) — the leaked
+* [`handout/flag_info.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/web/anatolian-atlas/handout/flag_info.txt) — the leaked
   recipe file, exactly as the server returned it.
 
 ## Requirements

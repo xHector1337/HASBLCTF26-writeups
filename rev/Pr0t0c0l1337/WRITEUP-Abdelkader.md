@@ -316,10 +316,10 @@ HASBL{TH3_PR0T0C0L_1337_IS_ACTIVATED}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Defaults to
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/Pr0t0c0l1337/solve.py) — argparse-driven solver. Defaults to
   `cmd = 0x03` against the live remote; `--cmd 0x00` etc. flips the
   dispatch byte if you want to confirm the other handlers.
-* [`handout/main`](./handout/main) — the original ELF.
+* [`handout/main`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/rev/Pr0t0c0l1337/handout/main) — the original ELF.
 
 ## Requirements
 

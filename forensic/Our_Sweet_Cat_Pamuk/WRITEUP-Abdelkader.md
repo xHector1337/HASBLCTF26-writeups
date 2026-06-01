@@ -169,11 +169,11 @@ HASBL{P4muk_w1th_gl4s5e5}
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Base64-decodes
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/pamuk/solve.py) — argparse-driven solver. Base64-decodes
   the JPEG, writes it out, and prints the flag from the embedded
   hex. `--ocr` flag (optional) re-derives the hex via
   `tesseract --psm 6` for the literal "use OCR" walkthrough.
-* [`handout/pamuk.txt`](./handout/pamuk.txt) — original base64 blob.
+* [`handout/pamuk.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/forensic/pamuk/handout/pamuk.txt) — original base64 blob.
 
 ## Requirements
 

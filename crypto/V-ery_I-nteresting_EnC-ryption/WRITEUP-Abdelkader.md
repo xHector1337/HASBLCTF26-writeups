@@ -261,14 +261,14 @@ procedure. The challenge name's acrostic is the hint.
 
 ## Files
 
-* [`solve.py`](./solve.py) — argparse-driven solver. Parses the
+* [`solve.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/vic/solve.py) — argparse-driven solver. Parses the
   `KEY:` and `CIPHERTEXT:` lines out of `output.txt`, regenerates the
   chain-addition keystream from the key, subtracts it from the digit
   string, runs the checkerboard parser (with the `3`/`6` two-digit
   rule), and undoes the SPECIAL_TO_WORD substitution with
   longest-prefix matching. Standard library only.
-* [`handout/chall.py`](./handout/chall.py) — original encryptor.
-* [`handout/output.txt`](./handout/output.txt) — `KEY:`/
+* [`handout/chall.py`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/vic/handout/chall.py) — original encryptor.
+* [`handout/output.txt`](https://github.com/Abdelkad3r/hasblctf-2026/blob/main/crypto/vic/handout/output.txt) — `KEY:`/
   `CIPHERTEXT:` lines.
 
 ## Requirements
